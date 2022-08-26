@@ -20,7 +20,7 @@ Revue d'Économie du Développement : Naïve correlation between debt and psycho
 clear all
 macro drop _all
 ********** Path to folder "data" folder.
-global directory = "C:\Users\Arnaud\Documents\_Thesis\Research-Skills_and_debt\Analysis"
+global directory = "C:\Users\Arnaud\Documents\MEGA\Thesis\Thesis_Debt_skills\Analysis"
 cd"$directory"
 global git "C:\Users\Arnaud\Documents\GitHub"
 
@@ -611,7 +611,7 @@ est store nego_`i'_`j'
 }
 esttab nego*, b(%6.3f)
 
-
+/*
 ***** Management
 /*
 qui reg locuscontrol`d' debt_mana_indiv
@@ -637,12 +637,17 @@ replace locuscat`i'=2 if locuscontrol`i'==3
 replace locuscat`i'=3 if locuscontrol`i'>3
 label values locuscat`i' cat
 }
-
+*/
 
 
 
 ********** Test econometrics
 probit debt_reco_indiv c.locus##i.female##i.dalit
+
+probit debt_reco_indiv c.locus
+probit debt_nego_indiv c.locus
+
+
 probit debt_reco_indiv c.locus##i.female##i.dalit ///
 i.relationshiptohead assets_noland annualincome_indiv i.mainocc_occupation_indiv i.edulevel, cluster(HHID_panel)
 margin, dydx(locus) at(dalit=(0 1) female=(0 1))
