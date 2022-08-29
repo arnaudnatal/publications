@@ -558,108 +558,40 @@ est store nego_`i'_`j'
 esttab nego*, b(%6.3f) 
 
 
-***** Management
-qui reg locus debt_mana_indiv
-est store mana
-forvalues i=0/1 {
-forvalues j=0/1 {
-qui reg locus debt_mana_indiv if female==`i' & dalit==`j'
-est store mana_`i'_`j'
-}
-}
-esttab mana*, b(%6.3f) nostar
-
-
-/*
-1. I like taking responsibility.
-2. I find it best to make decisions by myself rather than to rely on fate.
-3. When I encounter problems or opposition, I usually find ways and means to overcome them.
-4. Success often depends more on luck than on effort.
-5. I often have the feeling that I have little influence over what happens to me.
-6. When I make important decisions, I often look at what others have done.
-*/
-
-global locus locuscontrol1 locuscontrol2 locuscontrol3 locuscontrol4 locuscontrol5 locuscontrol6
 
 
 
+********** Probit margins
+gen dummyhead=0
+replace dummyhead=1 if relationshiptohead==1
+
+global indivcontrol age dummyhead i.mainocc_occupation_indiv i.edulevel i.maritalstatus
+global hhcontrol4 assets_noland hhsize covsell annualincome_HH
+global villagesFE i.villageid
+
+global cont $indivcontrol $hhcontrol4 $villagesFE
+
+encode HHID_panel, gen(HHcl)
+
+***** Reco
 cls
-********** Locus of control
-forvalues d=1/6 {
+probit debt_reco_indiv c.locus i.female i.dalit $cont, cluster(HHcl)
+margins, dydx(locus) atmeans 
 
-***** Recourse
-/*
-qui reg locuscontrol`d' debt_reco_indiv
-est store reco
-forvalues i=0/1 {
-forvalues j=0/1 {
-qui reg locuscontrol`d' debt_reco_indiv if female==`i' & dalit==`j'
-est store reco_`i'_`j'
-}
-}
-esttab reco*, b(%6.3f)
-*/
-
-***** Negotiation
-qui reg locuscontrol`d' debt_nego_indiv
-est store nego
-forvalues i=0/1 {
-forvalues j=0/1 {
-qui reg locuscontrol`d' debt_nego_indiv if female==`i' & dalit==`j'
-est store nego_`i'_`j'
-}
-}
-esttab nego*, b(%6.3f)
-
-/*
-***** Management
-/*
-qui reg locuscontrol`d' debt_mana_indiv
-est store mana
-forvalues i=0/1 {
-forvalues j=0/1 {
-qui reg locuscontrol`d' debt_mana_indiv if female==`i' & dalit==`j'
-est store mana_`i'_`j'
-}
-}
-esttab mana*, b(%6.3f)
-*/
-}
-
-tabstat $locus, stat(mean) by(debt_mana_indiv)
-fre $locus
-
-label define cat 1"Intern" 2"Neutral" 3"Extern"
-forvalues i=1(1)6 {
-gen locuscat`i'=.
-replace locuscat`i'=1 if locuscontrol`i'<3
-replace locuscat`i'=2 if locuscontrol`i'==3
-replace locuscat`i'=3 if locuscontrol`i'>3
-label values locuscat`i' cat
-}
-*/
+probit debt_reco_indiv c.locus##i.female##i.dalit $cont, cluster(HHcl)
+margins, dydx(locus) at(dalit=(0 1) female=(0 1)) atmeans 
 
 
 
-********** Test econometrics
-probit debt_reco_indiv c.locus##i.female##i.dalit
+***** Nego
+cls
+probit debt_nego_indiv c.locus i.female i.dalit $cont, cluster(HHcl)
+margins, dydx(locus) atmeans 
 
-probit debt_reco_indiv c.locus
-probit debt_nego_indiv c.locus
+probit debt_nego_indiv c.locus##i.female##i.dalit $cont, cluster(HHcl)
+margins, dydx(locus) at(dalit=(0 1) female=(0 1)) atmeans 
 
 
-probit debt_reco_indiv c.locus##i.female##i.dalit ///
-i.relationshiptohead assets_noland annualincome_indiv i.mainocc_occupation_indiv i.edulevel, cluster(HHID_panel)
-margin, dydx(locus) at(dalit=(0 1) female=(0 1))
 
-probit debt_nego_indiv c.locus##i.female##i.dalit
-probit debt_nego_indiv c.locus##i.female##i.dalit ///
-i.relationshiptohead assets_noland annualincome_indiv i.mainocc_occupation_indiv i.edulevel, cluster(HHID_panel)
-margin, dydx(locus) at(dalit=(0 1) female=(0 1))
-
-probit debt_mana_indiv c.locus##i.female##i.dalit
-probit debt_mana_indiv c.locus##i.female##i.dalit ///
-i.relationshiptohead assets_noland annualincome_indiv i.mainocc_occupation_indiv i.edulevel, cluster(HHID_panel)
-margin, dydx(locus) at(dalit=(0 1) female=(0 1))
 ****************************************
 * END
