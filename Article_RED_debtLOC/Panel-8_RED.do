@@ -593,5 +593,16 @@ margins, dydx(locus) at(dalit=(0 1) female=(0 1)) atmeans
 
 
 
+
+***** Nego
+cls
+probit  borrowerservices_none c.locus i.female i.dalit $cont, cluster(HHcl)
+margins, dydx(locus) atmeans 
+
+probit  borrowerservices_none c.locus##i.female##i.dalit $cont, cluster(HHcl)
+margins, dydx(locus) at(dalit=(0 1) female=(0 1)) atmeans 
+
+
+
 ****************************************
 * END
