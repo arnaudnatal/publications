@@ -5,42 +5,27 @@ Arnaud Natal
 arnaud.natal@u-bordeaux.fr
 July 22, 2022
 -----
-Revue d'Économie du Développement : Naïve correlation between debt and psychology
+Revue d'Économie du Développement :
+Locus de contrôle, identité sociale et endettement en Inde du Sud
 -----
 
 -------------------------
 */
 
-*ssc install catplot
-*ssc install sencode
+
+
 
 ****************************************
 * INITIALIZATION
 ****************************************
 clear all
 macro drop _all
-********** Path to folder "data" folder.
+
 global directory = "C:\Users\Arnaud\Documents\MEGA\Thesis\Thesis_Debt_skills\Analysis"
 cd"$directory"
 global git "C:\Users\Arnaud\Documents\GitHub"
 
-set scheme plotplain 
-
-*Fac
-*cd "C:\Users\anatal\Downloads\_Thesis\Research-Skills_and_debt\Analysis"
-*set scheme plotplain
-
-*global git "C:\Users\anatal\Downloads\GitHub"
-*global dropbox "C:\Users\anatal\Downloads\Dropbox"
-*global thesis "C:\Users\anatal\Downloads\_Thesis\Research-Skills_and_debt\Analysis"
-
-
-
-********** Name of the NEEMSIS2 questionnaire version to clean
-*global wave1 "RUME-HH_v8"
-global wave2 "NEEMSIS1-HH"
 global wave3 "NEEMSIS2-HH"
-
 global loan "NEEMSIS2-all_loans"
 ****************************************
 * END
